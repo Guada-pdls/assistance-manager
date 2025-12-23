@@ -1,0 +1,101 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Rehearsal {
+  id Int @id @default(autoincrement())
+  dateTime DateTime @unique
+  notes Json
+  placeId Int
+  semesterYear Int
+  semesterNum String
+
+  place Place @relation(fields: [placeId], references: [id])
+  semester Semester @relation(fields: [semesterYear, semesterNum], references: [year, num])
+  voiceParts VoicePart[]
+  attendances Attendance[]
+
+  @@index([dateTime])
+  @@index([semesterYear, semesterNum, dateTime])
+}
+
+model Semester {
+  year Int
+  num String
+  startDate DateTime
+  endDate DateTime
+
+  rehearsals Rehearsal[]
+  @@id([year, num])
+  @@unique([startDate, endDate])
+}
+
+model Chorister {
+  id Int @id @default(autoincrement())
+  firstName String
+  lastName String
+  isActive Boolean @default(true)
+  email String @unique
+  passwordHash String
+
+  attendances Attendance[]
+  belongs Belongs[]
+}
+
+model VoicePart {
+  title String @id
+
+  rehearsals Rehearsal[]
+  belongs Belongs[]
+}
+
+model Place {
+  id Int @id @default(autoincrement())
+  placeName String @unique
+  lon Decimal
+  lat Decimal
+
+  rehearsals Rehearsal[]
+  @@unique([lon, lat])
+}
+
+model Attendance {
+  choristerId Int
+  rehearsalId Int
+  state State
+  arrivalTime DateTime?
+
+  chorister Chorister @relation(fields: [choristerId], references: [id])
+  rehearsal Rehearsal @relation(fields: [rehearsalId], references: [id])
+  @@id([choristerId, rehearsalId])
+  @@index([choristerId])
+  @@index([rehearsalId])
+  @@index([choristerId, state])
+}
+
+enum State {
+  AUSENTE
+  PUNTUAL
+  LLEGADA_TARDE
+  JUSTIFICADA
+}
+
+model Belongs {
+  choristerId Int
+  title String
+  divisi Int
+
+  chorister Chorister @relation(fields: [choristerId], references: [id])
+  voicePart VoicePart @relation(fields: [title], references: [title])
+  @@id([choristerId, title])
+}

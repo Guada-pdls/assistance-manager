@@ -14,7 +14,8 @@ datasource db {
 
 model Rehearsal {
   id Int @id @default(autoincrement())
-  dateTime DateTime @unique
+  startTime DateTime
+  endTime DateTime
   notes Json
   placeId Int
   semesterYear Int
@@ -25,8 +26,9 @@ model Rehearsal {
   voiceParts VoicePart[]
   attendances Attendance[]
 
-  @@index([dateTime])
-  @@index([semesterYear, semesterNum, dateTime])
+  @@unique([startTime, endTime])
+  @@index([startTime])
+  @@index([semesterYear, semesterNum, startTime])
 }
 
 model Semester {
@@ -40,16 +42,30 @@ model Semester {
   @@unique([startDate, endDate])
 }
 
-model Chorister {
-  id Int @id @default(autoincrement())
-  firstName String
-  lastName String
-  isActive Boolean @default(true)
-  email String @unique
-  passwordHash String
+enum Role {
+  ADMIN
+  CHORISTER
+}
 
+model User {
+  id           Int     @id @default(autoincrement())
+  email        String  @unique
+  passwordHash String
+  firstName    String
+  lastName     String
+  role         Role
+
+  chorister Chorister?
+}
+
+model Chorister {
+  id        Int     @id @default(autoincrement())
+  userId    Int     @unique
+  isActive  Boolean @default(true)
+
+  user        User        @relation(fields: [userId], references: [id])
   attendances Attendance[]
-  belongs Belongs[]
+  belongs     Belongs[]
 }
 
 model VoicePart {

@@ -1,0 +1,6 @@
+export enum AttendanceState {
+  AUSENTE = "AUSENTE",
+  PUNTUAL = "PUNTUAL",
+  LLEGADA_TARDE = "LLEGADA_TARDE",
+  JUSTIFICADA = "JUSTIFICADA",
+}

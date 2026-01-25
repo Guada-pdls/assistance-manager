@@ -1,5 +1,6 @@
 import { Attendance } from "../attendance/Attendance";
 import { Place } from "../place/Place";
+import { InvalidRehearsalDateError } from "./errors";
 
 export class Rehearsal {
     startTime: Date;
@@ -25,6 +26,10 @@ export class Rehearsal {
     }
 
     setDateTimes(startTime: Date, endTime: Date) {
+        if (startTime > endTime) {
+            throw new InvalidRehearsalDateError();
+        }
+
         this.startTime = startTime;
         this.endTime = endTime;
     }

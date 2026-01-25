@@ -1,3 +1,5 @@
+import { InvalidSemesterDateError } from "./errors";
+
 export class Semester {
     year: number;
     num: number;
@@ -12,6 +14,10 @@ export class Semester {
     }
 
     setDates(startDate: Date, endDate: Date) {
+        if (startDate > endDate) {
+            throw new InvalidSemesterDateError();
+        }
+
         this.startDate = startDate;
         this.endDate = endDate;
     }

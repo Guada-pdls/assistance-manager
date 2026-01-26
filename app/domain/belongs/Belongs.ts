@@ -1,11 +1,11 @@
 export class Belongs {
     choristerId: number;
-    rehearsalId: number;
+    voicePartTitle: string;
     divisi: number
 
-    constructor(choristerId: number, rehearsalId: number, divisi: number) {
+    constructor(choristerId: number, voicePartTitle: string, divisi: number) {
         this.choristerId = choristerId
-        this.rehearsalId = rehearsalId
+        this.voicePartTitle = voicePartTitle
         this.divisi = divisi
     }
 }

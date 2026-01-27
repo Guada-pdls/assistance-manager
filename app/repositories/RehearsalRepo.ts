@@ -45,6 +45,29 @@ export class RehearsalRepository {
         return records
     }
 
+    async findActiveRehearsal(date: Date) : Promise<Rehearsal | null> {
+        const now = new Date(date)
+        const early = new Date(now.getTime() + 20 * 60 * 1000)
+        const endOfDay = new Date(now)
+        endOfDay.setHours(23, 59, 59, 999)
+
+        const rehearsal = await this.prisma.rehearsal.findFirst({
+            where: {
+                startTime: {
+                    gte: early
+                },
+                endTime: {
+                    lte: endOfDay
+                }
+            },
+            orderBy: {
+                startTime: 'asc'
+            }
+        })
+
+        return rehearsal
+    }
+
     async findBySemesterAndVoiceParts(year: number, num: number, voiceParts: VoicePart[])
         : Promise<Rehearsal | null> {
         const records = await this.prisma.rehearsal.findMany({

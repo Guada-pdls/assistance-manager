@@ -5,6 +5,16 @@ import { AttendanceState } from "../domain/attendance/AttendanceState";
 export class AttendanceRepository {
     constructor(private prisma: PrismaClient) {}
 
+    async findById(id: number) : Promise<Attendance | null> {
+        const record = await this.prisma.attendance.findFirst({
+            where: {
+                id: id,
+            },
+        });
+
+        return record
+    }
+
     async findByChoristerAndSemester(choristerId: number, year: number, num: number) : Promise<Attendance[] | null> {
         const records = await this.prisma.attendance.findMany({
             where: {
@@ -54,6 +64,17 @@ export class AttendanceRepository {
         }
 
         return records
+    }
+
+    async findByChoristerAndRehearsal(choristerId: number, rehearsalId: number) : Promise<Attendance | null> {
+        const record = await this.prisma.attendance.findFirst({
+            where: {
+                choristerId: choristerId,
+                rehearsalId: rehearsalId,
+            },
+        });
+
+        return record
     }
 
     async save(attendance: Attendance) : Promise<void> {

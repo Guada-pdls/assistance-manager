@@ -4,10 +4,10 @@ import { AttendanceState } from "./AttendanceState";
 import { AttendanceAlreadyMarkedError, ChoristerNotActiveError, RehearsalClosedError } from "./errors";
 
 export class Attendance {
-    choristerId: number;
-    rehearsalId: number;
-    state: AttendanceState;
-    arrivalTime: Date | null;
+    private choristerId: number;
+    private rehearsalId: number;
+    private state: AttendanceState;
+    private arrivalTime: Date | null;
 
     constructor(choristerId: number, rehearsalId: number) {
         this.choristerId = choristerId;

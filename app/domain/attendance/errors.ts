@@ -21,3 +21,15 @@ export class ChoristerNotActiveError extends Error {
         super("El coreuta no está activo.");
     }
 }
+
+export class RehearsalNotFoundError extends Error {
+    constructor() {
+        super("Ensayo no encontrado.");
+    }
+}
+
+export class ChoristerNotFoundError extends Error {
+    constructor() {
+        super("Coreuta no encontrado.");
+    }
+}

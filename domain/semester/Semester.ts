@@ -1,10 +1,10 @@
 import { InvalidSemesterDateError } from "./errors";
 
 export class Semester {
-    year: number;
-    num: number;
-    startDate: Date;
-    endDate: Date;
+    private year: number;
+    private num: number;
+    private startDate: Date;
+    private endDate: Date;
 
     constructor(year: number, num: number, startDate: Date, endDate: Date) {
         this.year = year;
@@ -20,5 +20,21 @@ export class Semester {
 
         this.startDate = startDate;
         this.endDate = endDate;
+    }
+
+    getYear(): number {
+        return this.year;
+    }
+
+    getNum(): number {
+        return this.num;
+    }
+
+    getStartDate(): Date {
+        return this.startDate;
+    }
+
+    getEndDate(): Date {
+        return this.endDate;
     }
 }

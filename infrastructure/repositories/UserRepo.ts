@@ -1,5 +1,5 @@
 import { PrismaClient } from "@prisma/client/extension";
-import { User } from "../domain/user/User";
+import { User } from "../../domain/user/User";
 
 export class UserRepository {
     constructor(private prisma: PrismaClient) { }

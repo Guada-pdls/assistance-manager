@@ -1,6 +1,6 @@
 import { PrismaClient } from "@prisma/client/extension";
-import { Attendance } from "../domain/attendance/Attendance";
-import { AttendanceState } from "../domain/attendance/AttendanceState";
+import { Attendance } from "../../domain/attendance/Attendance";
+import { AttendanceState } from "../../domain/attendance/AttendanceState";
 
 export class AttendanceRepository {
     constructor(private prisma: PrismaClient) {}

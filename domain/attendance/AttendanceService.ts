@@ -1,8 +1,8 @@
-import { AttendanceRepository } from "@/app/repositories/AttendanceRepo";
+import { AttendanceRepository } from "@/infrastructure/repositories/AttendanceRepo";
 import { Attendance } from "./Attendance";
-import { RehearsalRepository } from "@/app/repositories/RehearsalRepo";
-import { AttendanceNotFoundError, ChoristerNotFoundError, RehearsalNotFoundError } from "./errors";
-import { ChoristerRepository } from "@/app/repositories/ChoristerRepo";
+import { RehearsalRepository } from "@/infrastructure/repositories/RehearsalRepo";
+import { AttendanceNotFoundError, ChoristerNotFoundError, RehearsalNotFoundError } from "../errors";
+import { ChoristerRepository } from "@/infrastructure/repositories/ChoristerRepo";
 import { AttendanceState } from "./AttendanceState";
 
 export class AttendanceService {
@@ -25,7 +25,7 @@ export class AttendanceService {
             throw new ChoristerNotFoundError()
         }
 
-        const attendance = await this.attendanceRepository.findByChoristerAndRehearsal(choristerId, rehearsal.id)
+        const attendance = await this.attendanceRepository.findByChoristerAndRehearsal(choristerId, rehearsal.getId())
 
         if (attendance === null) {
             throw new AttendanceNotFoundError()
@@ -45,8 +45,10 @@ export class AttendanceService {
             throw new AttendanceNotFoundError()
         }
 
-        attendance.state = newState
+        attendance.setState(newState)
 
-        await this.attendanceRepository.save(attendance
+        await this.attendanceRepository.save(attendance)
+
+        return attendance
     }
 }

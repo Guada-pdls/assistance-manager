@@ -1,6 +1,6 @@
 import { PrismaClient } from "@prisma/client/extension";
-import { VoicePart } from "../domain/voicePart/VoicePart";
-import { Belongs } from "../domain/belongs/Belongs";
+import { VoicePart } from "../../domain/voicePart/VoicePart";
+import { Belongs } from "../../domain/belongs/Belongs";
 
 export class BelongsRepository {
     constructor(private prisma: PrismaClient) { }
@@ -10,7 +10,7 @@ export class BelongsRepository {
             where: {
                 choristerId: choristerId,
                 voicePart: {
-                    title: voicePart.title
+                    title: voicePart.getTitle()
                 }
             }
         })
@@ -23,17 +23,17 @@ export class BelongsRepository {
     async save(belongs: Belongs): Promise<void> {
         await this.prisma.belongs.upsert({
             where: {
-                choristerId_title: {
-                    choristerId: belongs.choristerId,
-                    title: belongs.voicePartTitle
-                }
+            choristerId_title: {
+                choristerId: belongs.getChoristerId(),
+                title: belongs.getVoicePartTitle()
+            }
             },
             create: {
-                choristerId: belongs.choristerId,
-                voicePartTitle: belongs.voicePartTitle
+            choristerId: belongs.getChoristerId(),
+            voicePartTitle: belongs.getVoicePartTitle()
             },
             update: {
-                divisi: belongs.divisi
+            divisi: belongs.getDivisi()
             }
         })
     }
@@ -42,8 +42,8 @@ export class BelongsRepository {
         await this.prisma.belongs.delete({
             where: {
                 choristerId_title: {
-                    choristerId: belongs.choristerId,
-                    title: belongs.voicePartTitle
+                    choristerId: belongs.getChoristerId(),
+                    title: belongs.getVoicePartTitle()
                 }
             }
         })

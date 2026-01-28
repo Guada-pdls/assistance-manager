@@ -1,9 +1,26 @@
 import { PrismaClient } from "@prisma/client/extension";
-import { Rehearsal } from "../domain/rehearsal/Rehearsal";
-import { VoicePart } from "../domain/voicePart/VoicePart";
+import { Rehearsal } from "../../domain/rehearsal/Rehearsal";
+import { VoicePart } from "../../domain/voicePart/VoicePart";
 
 export class RehearsalRepository {
     constructor(private prisma: PrismaClient) { }
+
+    async findById(id: number): Promise<Rehearsal | null> {
+        const record = await this.prisma.rehearsal.findFirst({
+            where: {
+                id: id,
+            },
+            include: {
+                voiceParts: true,
+                place: true,
+                semester: true,
+            }
+        })
+
+        if (record === null) return null
+
+        return record
+    }
 
     async findBySemester(year: number, num: number): Promise<Rehearsal[] | null> {
         const records = await this.prisma.rehearsal.findMany({
@@ -91,37 +108,37 @@ export class RehearsalRepository {
 
     async save(rehearsal: Rehearsal): Promise<void> {
         await this.prisma.rehearsal.upsert({
-            where: { id: rehearsal.id },
+            where: { id: rehearsal.getId() },
             update: {
-                startTime: rehearsal.startTime,
-                endTime: rehearsal.endTime,
+                startTime: rehearsal.getStartTime(),
+                endTime: rehearsal.getEndTime(),
                 voiceParts: {
-                    set: rehearsal.voiceParts.map(voicePart => ({
-                        title: voicePart.title
+                    set: rehearsal.getVoiceParts().map(voicePart => ({
+                        title: voicePart.getTitle()
                     }))
                 },
-                notes: rehearsal.notes,
-                placeId: rehearsal.place.id,
+                notes: rehearsal.getNotes(),
+                placeId: rehearsal.getPlace().getId(),
             },
             create: {
-                startTime: rehearsal.startTime,
-                endTime: rehearsal.endTime,
+                startTime: rehearsal.getStartTime(),
+                endTime: rehearsal.getEndTime(),
                 voiceParts: {
-                    connect: rehearsal.voiceParts.map(voicePart => ({
-                        title: voicePart.title
+                    connect: rehearsal.getVoiceParts().map(voicePart => ({
+                        title: voicePart.getTitle()
                     })),
                 },
-                notes: rehearsal.notes,
-                placeId: rehearsal.place.id,
-                semesterYear: rehearsal.semester.year,
-                semesterNum: rehearsal.semester.num,
+                notes: rehearsal.getNotes(),
+                placeId: rehearsal.getPlace().getId(),
+                semesterYear: rehearsal.getSemester().getYear(),
+                semesterNum: rehearsal.getSemester().getNum(),
             }
         })
     }
 
     async delete(rehearsal: Rehearsal): Promise<void> {
         await this.prisma.rehearsal.delete({
-            where: { id: rehearsal.id }
+            where: { id: rehearsal.getId() }
         })
     }
 }

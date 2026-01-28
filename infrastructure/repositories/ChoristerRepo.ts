@@ -1,5 +1,5 @@
 import { PrismaClient } from "@prisma/client/extension";
-import { Chorister } from "../domain/user/Chorister";
+import { Chorister } from "../../domain/user/Chorister";
 
 export class ChoristerRepository {
     constructor(private prisma: PrismaClient) { }

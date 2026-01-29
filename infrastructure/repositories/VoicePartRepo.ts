@@ -8,7 +8,7 @@ export class VoicePartRepository {
         const record = await this.prisma.voicePart.findFirst({
             where: {
                 title: title,
-            },
+            }
         });
 
         return record

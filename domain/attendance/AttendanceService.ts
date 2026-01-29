@@ -51,4 +51,8 @@ export class AttendanceService {
 
         return attendance
     }
+
+    async save(attendance: Attendance) : Promise<void> {
+        await this.attendanceRepository.save(attendance)
+    }
 }
